@@ -15,7 +15,6 @@ assignees: ""
 ## Implementation Notes
 <!-- Any technical details, constraints, or decisions worth documenting upfront -->
 
-
 ## Acceptance Criteria
 
 - [ ] Manifests / Helm values written and reviewed
