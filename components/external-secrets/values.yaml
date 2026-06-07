@@ -1,0 +1,30 @@
+installCRDs: true
+
+serviceAccount:
+  create: true
+  name: external-secrets
+  annotations:
+    iam.gke.io/gcp-service-account: es-operator@carbon-zone-496411-s6.iam.gserviceaccount.com
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 192Mi
+
+webhook:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 96Mi
+
+certController:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 96Mi
