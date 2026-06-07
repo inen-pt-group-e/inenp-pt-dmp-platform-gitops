@@ -1,0 +1,30 @@
+provider:
+  name: google
+
+sources:
+  - service
+  - ingress
+
+domainFilters:
+  - mcce-project.xyz
+
+policy: sync
+
+registry: txt
+txtOwnerId: inenp-pt-dmp-platform
+
+extraArgs:
+  - --google-project=carbon-zone-496411-s6
+
+serviceAccount:
+  create: true
+  name: external-dns
+  annotations:
+    iam.gke.io/gcp-service-account: external-dns@carbon-zone-496411-s6.iam.gserviceaccount.com
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 128Mi
