@@ -1,0 +1,44 @@
+controller:
+  replicaCount: 1
+
+  service:
+    enabled: true
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    annotations:
+      cloud.google.com/l4-rbs: "enabled"
+
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: true
+
+  watchIngressWithoutClass: false
+
+  allowSnippetAnnotations: false
+
+  config:
+    use-forwarded-headers: "true"
+    enable-real-ip: "true"
+    proxy-body-size: "16m"
+
+  metrics:
+    enabled: false
+
+  admissionWebhooks:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+defaultBackend:
+  enabled: false
