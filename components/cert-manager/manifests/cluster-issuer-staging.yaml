@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@mcce-project.xyz
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      - selector:
+          dnsZones:
+            - mcce-project.xyz
+        dns01:
+          cloudDNS:
+            project: carbon-zone-496411-s6

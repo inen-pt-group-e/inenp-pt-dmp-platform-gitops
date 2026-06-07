@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  sources:
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: v1.20.2
+      helm:
+        releaseName: cert-manager
+        valueFiles:
+          - $values/components/cert-manager/values.yaml
+    - repoURL: https://github.com/inen-pt-group-e/inenp-pt-dmp-platform-gitops
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/inen-pt-group-e/inenp-pt-dmp-platform-gitops
+      targetRevision: main
+      path: components/cert-manager/manifests
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - SkipDryRunOnMissingResource=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m
