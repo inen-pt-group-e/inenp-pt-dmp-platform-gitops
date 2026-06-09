@@ -1,0 +1,12 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: gcp-workload-identity
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  serviceAccountTemplate:
+    metadata:
+      name: provider-gcp
+      annotations:
+        iam.gke.io/gcp-service-account: crossplane@carbon-zone-496411-s6.iam.gserviceaccount.com
