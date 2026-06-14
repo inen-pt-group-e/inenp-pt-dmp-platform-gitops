@@ -1,0 +1,61 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: tenant
+spec:
+  compositeTypeRef:
+    apiVersion: platform.mcce-project.xyz/v1alpha1
+    kind: Tenant
+  mode: Pipeline
+  pipeline:
+    - step: render
+      functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        kind: GoTemplate
+        source: Inline
+        inline:
+          template: |
+            {{- $tenant := .observed.composite.resource.metadata.name }}
+            {{- $ns := printf "tenant-%s" $tenant }}
+            {{- $db := .observed.composite.resource.spec.database | default dict }}
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-namespace
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: namespace
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: v1
+                  kind: Namespace
+                  metadata:
+                    name: {{ $ns }}
+                    labels:
+                      platform.mcce-project.xyz/tenant: {{ $tenant }}
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-db
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: database
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: postgresql.cnpg.io/v1
+                  kind: Cluster
+                  metadata:
+                    name: {{ $tenant }}-db
+                    namespace: {{ $ns }}
+                  spec:
+                    instances: {{ $db.instances | default 1 }}
+                    storage:
+                      size: {{ $db.storageSize | default "1Gi" | quote }}
+              providerConfigRef:
+                name: default
