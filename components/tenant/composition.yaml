@@ -77,7 +77,7 @@ spec:
                 values:
                   image:
                     repository: ghcr.io/inen-pt-group-e/inenp-pt-dmp-backend
-                    tag: v1.3.0
+                    tag: v1.4.0
                   service:
                     type: ClusterIP
                     port: 8080
