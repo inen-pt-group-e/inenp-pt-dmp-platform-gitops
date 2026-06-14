@@ -59,6 +59,42 @@ spec:
                       size: {{ $db.storageSize | default "1Gi" | quote }}
               providerConfigRef:
                 name: default
+            ---
+            apiVersion: helm.crossplane.io/v1beta1
+            kind: Release
+            metadata:
+              name: {{ $tenant }}-backend
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: backend
+            spec:
+              forProvider:
+                namespace: {{ $ns }}
+                chart:
+                  repository: oci://ghcr.io/inen-pt-group-e/charts
+                  name: weather-app-backend
+                  version: "1.0.0"
+                values:
+                  image:
+                    repository: ghcr.io/inen-pt-group-e/inenp-pt-dmp-backend
+                    tag: v1.3.0
+                  service:
+                    type: ClusterIP
+                    port: 8080
+                  extraEnv:
+                    - name: SPRING_DATASOURCE_URL
+                      value: "jdbc:postgresql://{{ $tenant }}-db-rw.{{ $ns }}:5432/app"
+                    - name: SPRING_DATASOURCE_USERNAME
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ $tenant }}-db-app
+                          key: username
+                    - name: SPRING_DATASOURCE_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: {{ $tenant }}-db-app
+                          key: password
+              providerConfigRef:
+                name: default
     - step: ready
       functionRef:
         name: function-auto-ready
