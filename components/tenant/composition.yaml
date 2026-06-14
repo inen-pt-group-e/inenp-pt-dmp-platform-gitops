@@ -54,6 +54,7 @@ spec:
                     name: {{ $tenant }}-db
                     namespace: {{ $ns }}
                   spec:
+                    imageName: ghcr.io/cloudnative-pg/postgresql:16.3-bookworm
                     instances: {{ $db.instances | default 1 }}
                     storage:
                       size: {{ $db.storageSize | default "1Gi" | quote }}
