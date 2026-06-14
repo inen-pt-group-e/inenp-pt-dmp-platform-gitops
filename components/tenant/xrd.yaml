@@ -1,0 +1,31 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: tenants.platform.mcce-project.xyz
+spec:
+  scope: Cluster
+  group: platform.mcce-project.xyz
+  names:
+    kind: Tenant
+    plural: tenants
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                database:
+                  type: object
+                  default: {}
+                  properties:
+                    instances:
+                      type: integer
+                      default: 1
+                    storageSize:
+                      type: string
+                      default: "1Gi"
