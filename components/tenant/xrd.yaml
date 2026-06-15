@@ -29,3 +29,19 @@ spec:
                     storageSize:
                       type: string
                       default: "1Gi"
+                resources:
+                  type: object
+                  default: {}
+                  properties:
+                    requestsCpu:
+                      type: string
+                      default: "500m"
+                    requestsMemory:
+                      type: string
+                      default: "512Mi"
+                    limitsCpu:
+                      type: string
+                      default: "2"
+                    limitsMemory:
+                      type: string
+                      default: "2Gi"

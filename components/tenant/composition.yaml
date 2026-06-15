@@ -20,6 +20,7 @@ spec:
             {{- $tenant := .observed.composite.resource.metadata.name }}
             {{- $ns := printf "tenant-%s" $tenant }}
             {{- $db := .observed.composite.resource.spec.database | default dict }}
+            {{- $res := .observed.composite.resource.spec.resources | default dict }}
             ---
             apiVersion: kubernetes.crossplane.io/v1alpha2
             kind: Object
@@ -36,6 +37,29 @@ spec:
                     name: {{ $ns }}
                     labels:
                       platform.mcce-project.xyz/tenant: {{ $tenant }}
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-resource-quota
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: resource-quota
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: v1
+                  kind: ResourceQuota
+                  metadata:
+                    name: tenant-quota
+                    namespace: {{ $ns }}
+                  spec:
+                    hard:
+                      requests.cpu: {{ $res.requestsCpu | default "500m" | quote }}
+                      requests.memory: {{ $res.requestsMemory | default "512Mi" | quote }}
+                      limits.cpu: {{ $res.limitsCpu | default "2" | quote }}
+                      limits.memory: {{ $res.limitsMemory | default "2Gi" | quote }}
               providerConfigRef:
                 name: default
             ---
