@@ -167,7 +167,7 @@ spec:
                     namespace: {{ $ns }}
                   data:
                     config.js: |
-                      window.env = { VITE_BACKEND_API_URL: '/api' };
+                      window.APP_CONFIG = { enabled: true, VITE_BACKEND_API_URL: '/api' };
               providerConfigRef:
                 name: default
             ---
