@@ -106,6 +106,10 @@ spec:
                     type: ClusterIP
                     port: 8080
                   extraEnv:
+                    - name: SPRING_FLYWAY_ENABLED
+                      value: "false"
+                    - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+                      value: "update"
                     - name: SPRING_DATASOURCE_URL
                       value: "jdbc:postgresql://{{ $tenant }}-db-rw.{{ $ns }}:5432/app"
                     - name: SPRING_DATASOURCE_USERNAME
