@@ -132,6 +132,7 @@ spec:
                   name: weather-app-backend
                   version: "1.0.0"
                 values:
+                  fullnameOverride: {{ $tenant }}-backend
                   image:
                     repository: ghcr.io/inen-pt-group-e/inenp-pt-dmp-backend
                     tag: v1.4.0
