@@ -35,13 +35,13 @@ spec:
                   properties:
                     requestsCpu:
                       type: string
-                      default: "500m"
+                      default: "1"
                     requestsMemory:
                       type: string
-                      default: "512Mi"
+                      default: "2Gi"
                     limitsCpu:
                       type: string
-                      default: "2"
+                      default: "4"
                     limitsMemory:
                       type: string
-                      default: "2Gi"
+                      default: "4Gi"
