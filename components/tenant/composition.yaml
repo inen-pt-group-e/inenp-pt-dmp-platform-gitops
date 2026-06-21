@@ -92,6 +92,144 @@ spec:
             apiVersion: kubernetes.crossplane.io/v1alpha2
             kind: Object
             metadata:
+              name: {{ $tenant }}-network-policy-default-deny-ingress
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: network-policy-default-deny-ingress
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: networking.k8s.io/v1
+                  kind: NetworkPolicy
+                  metadata:
+                    name: default-deny-ingress
+                    namespace: {{ $ns }}
+                  spec:
+                    podSelector: {}
+                    policyTypes:
+                      - Ingress
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-network-policy-same-namespace
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: network-policy-same-namespace
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: networking.k8s.io/v1
+                  kind: NetworkPolicy
+                  metadata:
+                    name: allow-same-namespace
+                    namespace: {{ $ns }}
+                  spec:
+                    podSelector: {}
+                    policyTypes:
+                      - Ingress
+                    ingress:
+                      - from:
+                          - podSelector: {}
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-network-policy-ingress-frontend
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: network-policy-ingress-frontend
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: networking.k8s.io/v1
+                  kind: NetworkPolicy
+                  metadata:
+                    name: allow-ingress-nginx-to-frontend
+                    namespace: {{ $ns }}
+                  spec:
+                    podSelector:
+                      matchLabels:
+                        app: frontend
+                    policyTypes:
+                      - Ingress
+                    ingress:
+                      - from:
+                          - namespaceSelector:
+                              matchLabels:
+                                kubernetes.io/metadata.name: ingress-nginx
+                        ports:
+                          - protocol: TCP
+                            port: 80
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-network-policy-ingress-backend
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: network-policy-ingress-backend
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: networking.k8s.io/v1
+                  kind: NetworkPolicy
+                  metadata:
+                    name: allow-ingress-nginx-to-backend
+                    namespace: {{ $ns }}
+                  spec:
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/name: weather-app-backend
+                    policyTypes:
+                      - Ingress
+                    ingress:
+                      - from:
+                          - namespaceSelector:
+                              matchLabels:
+                                kubernetes.io/metadata.name: ingress-nginx
+                        ports:
+                          - protocol: TCP
+                            port: 8080
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
+              name: {{ $tenant }}-network-policy-cnpg-operator
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: network-policy-cnpg-operator
+            spec:
+              forProvider:
+                manifest:
+                  apiVersion: networking.k8s.io/v1
+                  kind: NetworkPolicy
+                  metadata:
+                    name: allow-cnpg-operator
+                    namespace: {{ $ns }}
+                  spec:
+                    podSelector:
+                      matchLabels:
+                        cnpg.io/cluster: {{ $tenant }}-db
+                    policyTypes:
+                      - Ingress
+                    ingress:
+                      - from:
+                          - namespaceSelector:
+                              matchLabels:
+                                kubernetes.io/metadata.name: cnpg-system
+                        ports:
+                          - protocol: TCP
+                            port: 8000
+              providerConfigRef:
+                name: default
+            ---
+            apiVersion: kubernetes.crossplane.io/v1alpha2
+            kind: Object
+            metadata:
               name: {{ $tenant }}-db
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: database
