@@ -6,3 +6,8 @@ spec:
   database:
     instances: 1
     storageSize: 1Gi
+  resources:
+    requestsCpu: "1"
+    requestsMemory: "2Gi"
+    limitsCpu: "4"
+    limitsMemory: "4Gi"
