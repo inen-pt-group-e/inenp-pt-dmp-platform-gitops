@@ -161,7 +161,7 @@ spec:
                                 kubernetes.io/metadata.name: ingress-nginx
                         ports:
                           - protocol: TCP
-                            port: 80
+                            port: 8080
               providerConfigRef:
                 name: default
             ---
@@ -417,9 +417,19 @@ spec:
                           - name: ghcr-pull-secret
                         containers:
                           - name: frontend
-                            image: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend:v1.2.0
+                            image: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend:v1.3.0
                             ports:
-                              - containerPort: 80
+                              - containerPort: 8080
+                            securityContext:
+                              runAsNonRoot: true
+                              runAsUser: 101
+                              allowPrivilegeEscalation: false
+                              readOnlyRootFilesystem: true
+                              capabilities:
+                                drop:
+                                  - ALL
+                              seccompProfile:
+                                type: RuntimeDefault
                             resources:
                               requests:
                                 cpu: "25m"
@@ -431,10 +441,14 @@ spec:
                               - name: config-js
                                 mountPath: /usr/share/nginx/html/config.js
                                 subPath: config.js
+                              - name: tmp
+                                mountPath: /tmp
                         volumes:
                           - name: config-js
                             configMap:
                               name: frontend-config
+                          - name: tmp
+                            emptyDir: {}
               providerConfigRef:
                 name: default
             ---
@@ -457,7 +471,7 @@ spec:
                       app: frontend
                     ports:
                       - port: 80
-                        targetPort: 80
+                        targetPort: 8080
                     type: ClusterIP
               providerConfigRef:
                 name: default
