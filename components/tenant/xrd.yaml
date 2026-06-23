@@ -45,3 +45,13 @@ spec:
                     limitsMemory:
                       type: string
                       default: "4Gi"
+                app:
+                  type: object
+                  default: {}
+                  properties:
+                    backendTag:
+                      type: string
+                      default: "v1.4.0"
+                    frontendTag:
+                      type: string
+                      default: "v1.3.0"

@@ -21,6 +21,9 @@ spec:
             {{- $ns := printf "tenant-%s" $tenant }}
             {{- $db := .observed.composite.resource.spec.database | default dict }}
             {{- $res := .observed.composite.resource.spec.resources | default dict }}
+            {{- $app := .observed.composite.resource.spec.app | default dict }}
+            {{- $backendTag := $app.backendTag | default "v1.4.0" }}
+            {{- $frontendTag := $app.frontendTag | default "v1.3.0" }}
             ---
             apiVersion: kubernetes.crossplane.io/v1alpha2
             kind: Object
@@ -273,7 +276,7 @@ spec:
                   fullnameOverride: {{ $tenant }}-backend
                   image:
                     repository: ghcr.io/inen-pt-group-e/inenp-pt-dmp-backend
-                    tag: v1.4.0
+                    tag: {{ $backendTag }}
                   service:
                     type: ClusterIP
                     port: 8080
@@ -417,7 +420,7 @@ spec:
                           - name: ghcr-pull-secret
                         containers:
                           - name: frontend
-                            image: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend:v1.3.0
+                            image: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend:{{ $frontendTag }}
                             ports:
                               - containerPort: 8080
                             securityContext:

@@ -3,6 +3,9 @@ kind: Tenant
 metadata:
   name: staging
 spec:
+  app:
+    backendTag: "v1.4.0"
+    frontendTag: "v1.3.0"
   database:
     instances: 1
     storageSize: 1Gi
