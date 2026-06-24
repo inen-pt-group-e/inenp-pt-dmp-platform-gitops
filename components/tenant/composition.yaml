@@ -372,110 +372,31 @@ spec:
               providerConfigRef:
                 name: default
             ---
-            apiVersion: kubernetes.crossplane.io/v1alpha2
-            kind: Object
-            metadata:
-              name: {{ $tenant }}-frontend-config
-              annotations:
-                gotemplating.fn.crossplane.io/composition-resource-name: frontend-config
-            spec:
-              forProvider:
-                manifest:
-                  apiVersion: v1
-                  kind: ConfigMap
-                  metadata:
-                    name: frontend-config
-                    namespace: {{ $ns }}
-                  data:
-                    config.js: |
-                      window.APP_CONFIG = { enabled: true, VITE_BACKEND_API_URL: '/api' };
-              providerConfigRef:
-                name: default
-            ---
-            apiVersion: kubernetes.crossplane.io/v1alpha2
-            kind: Object
+            apiVersion: helm.crossplane.io/v1beta1
+            kind: Release
             metadata:
               name: {{ $tenant }}-frontend
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: frontend
             spec:
               forProvider:
-                manifest:
-                  apiVersion: apps/v1
-                  kind: Deployment
-                  metadata:
-                    name: frontend
-                    namespace: {{ $ns }}
-                  spec:
-                    replicas: 1
-                    selector:
-                      matchLabels:
-                        app: frontend
-                    template:
-                      metadata:
-                        labels:
-                          app: frontend
-                      spec:
-                        imagePullSecrets:
-                          - name: ghcr-pull-secret
-                        containers:
-                          - name: frontend
-                            image: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend:{{ $frontendTag }}
-                            ports:
-                              - containerPort: 8080
-                            securityContext:
-                              runAsNonRoot: true
-                              runAsUser: 101
-                              allowPrivilegeEscalation: false
-                              readOnlyRootFilesystem: true
-                              capabilities:
-                                drop:
-                                  - ALL
-                              seccompProfile:
-                                type: RuntimeDefault
-                            resources:
-                              requests:
-                                cpu: "25m"
-                                memory: "64Mi"
-                              limits:
-                                cpu: "250m"
-                                memory: "128Mi"
-                            volumeMounts:
-                              - name: config-js
-                                mountPath: /usr/share/nginx/html/config.js
-                                subPath: config.js
-                              - name: tmp
-                                mountPath: /tmp
-                        volumes:
-                          - name: config-js
-                            configMap:
-                              name: frontend-config
-                          - name: tmp
-                            emptyDir: {}
-              providerConfigRef:
-                name: default
-            ---
-            apiVersion: kubernetes.crossplane.io/v1alpha2
-            kind: Object
-            metadata:
-              name: {{ $tenant }}-frontend-svc
-              annotations:
-                gotemplating.fn.crossplane.io/composition-resource-name: frontend-svc
-            spec:
-              forProvider:
-                manifest:
-                  apiVersion: v1
-                  kind: Service
-                  metadata:
-                    name: frontend
-                    namespace: {{ $ns }}
-                  spec:
-                    selector:
-                      app: frontend
-                    ports:
-                      - port: 80
-                        targetPort: 8080
+                namespace: {{ $ns }}
+                chart:
+                  repository: oci://ghcr.io/inen-pt-group-e/charts
+                  name: weather-app-frontend
+                  version: "1.0.0"
+                values:
+                  image:
+                    repository: ghcr.io/inen-pt-group-e/inenp-pt-dmp-frontend
+                    tag: {{ $frontendTag }}
+                  imagePullSecrets:
+                    - name: ghcr-pull-secret
+                  service:
                     type: ClusterIP
+                    port: 80
+                  config:
+                    enabled: true
+                    backendApiUrl: /api
               providerConfigRef:
                 name: default
             ---
