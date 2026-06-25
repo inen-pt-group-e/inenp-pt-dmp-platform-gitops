@@ -1,8 +1,0 @@
-apiVersion: platform.mcce-project.xyz/v1alpha1
-kind: Tenant
-metadata:
-  name: demo1
-spec:
-  database:
-    instances: 1
-    storageSize: 1Gi
