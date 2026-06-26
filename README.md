@@ -1,8 +1,10 @@
 # inenp-pt-dmp-platform-gitops
 
-GitOps manifests for the INENP-PT Data Management Platform — a Kubernetes-based multi-tenant SaaS platform built for the 
-MCCE — Cloud Computing Engineering master's programme at FH Burgenland (SS2026), by group inen-pt-group-e. 
-This repository is the main documentation entry point for the platform.
+GitOps manifests for the **INENP-PT Data Management Platform** — a Kubernetes-based
+multi-tenant SaaS platform built for the **MCCE — Cloud Computing Engineering** master's
+programme at FH Burgenland (SS2026), by group **inen-pt-group-e**.
+This repository is the **main documentation entry point** for the platform.
+
 ## Purpose
 
 This repository is the GitOps source of truth (ArgoCD) for everything deployed into
