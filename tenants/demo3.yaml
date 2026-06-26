@@ -1,0 +1,16 @@
+apiVersion: platform.mcce-project.xyz/v1alpha1
+kind: Tenant
+metadata:
+  name: demo3
+spec:
+  app:
+    backendTag: "v1.4.0"
+    frontendTag: "v1.3.0"
+  database:
+    instances: 1
+    storageSize: 1Gi
+  resources:
+    requestsCpu: "1"
+    requestsMemory: "2Gi"
+    limitsCpu: "4"
+    limitsMemory: "4Gi"
