@@ -1,7 +1,8 @@
 # inenp-pt-dmp-platform-gitops
 
 GitOps manifests for the **INENP-PT Data Management Platform** — a Kubernetes-based
-multi-tenant SaaS platform built for the FH Burgenland BSWE assignment (SS2026).
+multi-tenant SaaS platform built for the **MCCE — Cloud Computing Engineering** master's
+programme at FH Burgenland (SS2026), by group **inen-pt-group-e**.
 This repository is the **main documentation entry point** for the platform.
 
 ## Purpose
@@ -91,6 +92,15 @@ tenants/       # Tenant CR instances - one file per tenant
    `$values`, plus a manifests path if the component ships extra CRs).
 4. Open a PR; the lint workflow validates YAML. After merge, ArgoCD app-of-apps picks
    up the new Application and syncs it.
+
+## GenAI Usage
+
+- **Architecture & approach** — planning the platform topology and the app-of-apps /
+  Crossplane tenant provisioning model.
+- **File / code authoring** — assistance writing Kubernetes manifests, Helm values and
+  Crossplane Compositions.
+- **Troubleshooting** — debugging GitOps sync, Crossplane provisioning and cluster issues.
+- **Text creation** — providing generic text for issues and pull requests.
 
 ## Contributing
 
